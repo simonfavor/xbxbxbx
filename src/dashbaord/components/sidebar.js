@@ -1,5 +1,5 @@
 // src/components/Sidebar.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,6 +18,20 @@ import {
 const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, activeTab, setActiveTab }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      // Auto-close sidebar when resizing to mobile
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setIsSidebarOpen]);
 
   const navItems = [
     { name: 'Dashboard', path: '/account/dashboard', icon: FaChartLine },
@@ -31,43 +45,55 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, activeTab, setActiveTab }) =
     navigate('/login');
   };
 
+  const sidebarVariants = {
+    mobile: {
+      width: isSidebarOpen ? '16rem' : '0',
+      opacity: isSidebarOpen ? 1 : 0,
+      transition: { duration: 0.3 }
+    },
+    desktop: {
+      width: isSidebarOpen ? '16rem' : '5rem',
+      opacity: 1,
+      transition: { duration: 0.3 }
+    }
+  };
+
   return (
     <motion.div
-      className={`fixed h-screen bg-neutral-900 text-white z-40 transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'w-64' : 'w-20'
+      className={`fixed h-screen bg-neutral-900 text-white z-40 overflow-hidden ${
+        isMobile ? 'shadow-xl' : ''
       }`}
+      variants={sidebarVariants}
+      animate={isMobile ? 'mobile' : 'desktop'}
       initial={false}
     >
       {/* Logo and brand */}
       <div className="flex items-center justify-between p-4 border-b border-neutral-800">
-        <motion.div
-          className="flex items-center"
-          animate={{ opacity: isSidebarOpen ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {isSidebarOpen && (
-            <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="text-xl font-extrabold tracking-tight text-secondary"
-            >
+        {isSidebarOpen && (
+          <motion.div
+            className="flex items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <h1 className="text-xl font-extrabold tracking-tight text-secondary">
               GNF <span className="text-white">Invest</span>
-            </motion.h1>
-          )}
-        </motion.div>
+            </h1>
+          </motion.div>
+        )}
         
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-1 rounded-full hover:bg-neutral-800 transition-colors focus:outline-none"
-        >
-          {isSidebarOpen ? (
-            <FaChevronLeft className="w-4 h-4" />
-          ) : (
-            <FaChevronRight className="w-4 h-4" />
-          )}
-        </button>
+        {!isMobile && (
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-1 rounded-full hover:bg-neutral-800 transition-colors focus:outline-none"
+          >
+            {isSidebarOpen ? (
+              <FaChevronLeft className="w-4 h-4" />
+            ) : (
+              <FaChevronRight className="w-4 h-4" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Nav items */}
@@ -87,7 +113,12 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, activeTab, setActiveTab }) =
                         : 'text-gray-300 hover:bg-neutral-800 hover:text-white'
                     }`
                   }
-                  onClick={() => setActiveTab(item.name.toLowerCase())}
+                  onClick={() => {
+                    setActiveTab(item.name.toLowerCase());
+                    if (isMobile) {
+                      setIsSidebarOpen(false);
+                    }
+                  }}
                 >
                   <div className={`${isSidebarOpen ? 'mr-3' : 'mx-auto'}`}>
                     <item.icon className={`w-5 h-5 ${isActive ? 'text-neutral-900' : ''}`} />

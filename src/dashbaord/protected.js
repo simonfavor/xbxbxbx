@@ -53,7 +53,7 @@ const ProtectedRoute = () => {
 
       {/* Main content */}
       <div 
-        className={`flex flex-col flex-1 transition-all duration-300 ${
+        className={`flex flex-col flex-1 transition-all duration-300 max-sm:ml-0 ${
           isSidebarOpen ? 'ml-64' : 'ml-20'
         }`}
       >
