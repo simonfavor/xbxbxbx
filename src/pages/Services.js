@@ -164,86 +164,101 @@ const Services = () => {
   ];
 
   // Investment plans with eye-catching weekly earnings
-  const investmentPlans = [
+// Investment plans with updated packages, ROI, and withdrawal terms
+const investmentPlans = [
     {
-      name: "Starter",
-      price: "$99",
-      weekly: "$25-$75",
-      monthlyReturn: "4-8%",
+      name: "Crypto",
+      price: "$500",
+      roi: "30% ROI",
+      withdrawal: "10 days profit withdrawal",
       features: [
-        "Basic Analytics Dashboard",
-        "Single Portfolio Management",
-        "Weekly Market Reports",
-        "Email Support (24hr response)",
-        "Educational Webinars"
+        "Diversified cryptocurrency portfolio",
+        "Real-time crypto market analytics",
+        "Automated risk management",
+        "Blockchain technology insights",
+        "24/7 crypto market monitoring"
       ],
-      benefits: "Perfect for beginners looking to start their investment journey with essential tools and steady growth.",
+      benefits: "Perfect for those seeking rapid returns with frequent profit withdrawals in the dynamic crypto market.",
       color: "from-blue-400 to-teal-400"
     },
     {
-      name: "Growth",
-      price: "$249",
-      weekly: "$100-$225",
-      monthlyReturn: "8-12%",
+      name: "Crypto Compounding",
+      price: "$500",
+      roi: "70% ROI",
+      withdrawal: "45 days profit withdrawal",
       features: [
-        "Advanced Analytics Suite",
-        "3 Managed Portfolios",
-        "Daily Market Insights",
-        "Priority Email Support (12hr)",
-        "Strategy Consultation (Monthly)",
-        "Tax Optimization Tools"
+        "Accelerated growth strategy",
+        "Advanced crypto portfolio balancing",
+        "Compound interest optimization",
+        "DeFi and staking opportunities",
+        "Higher yield potential",
+        "Strategic market timing"
       ],
-      benefits: "Ideal for growing investors seeking enhanced returns with more diversification and personalized support.",
+      benefits: "Ideal for investors seeking maximum growth through the power of compounding with strategically timed withdrawals.",
       color: "from-teal-400 to-green-500",
       highlighted: true
     },
     {
-      name: "Pro",
-      price: "$499",
-      weekly: "$300-$550",
-      monthlyReturn: "12-18%",
+      name: "Bonds",
+      price: "$1,000",
+      roi: "30% ROI",
+      withdrawal: "Quarterly profit withdrawal",
       features: [
-        "Real-Time Data & Alerts",
-        "5 Advanced Portfolios",
-        "24/7 Priority Support",
-        "Quarterly Strategy Reviews",
-        "AI-Powered Trade Signals",
-        "Alternative Investment Access"
+        "Corporate and government bonds",
+        "Fixed income strategy",
+        "Lower volatility exposure",
+        "Quarterly dividend optimization",
+        "Inflation-protected securities"
       ],
-      benefits: "Designed for serious investors requiring comprehensive tools, diverse portfolios and expert guidance.",
+      benefits: "Designed for investors seeking stable returns with regular quarterly income from traditional bond markets.",
       color: "from-green-500 to-primary"
     },
     {
-      name: "Elite",
-      price: "$999",
-      weekly: "$700-$1,200",
-      monthlyReturn: "16-25%",
+      name: "Agriculture",
+      price: "$1,000",
+      roi: "30% ROI",
+      withdrawal: "Quarterly profit withdrawal",
       features: [
-        "Custom Investment Strategies",
-        "10 Diverse Portfolios",
-        "Dedicated Personal Advisor",
-        "International Market Access",
-        "Exclusive Investment Opportunities",
-        "Algorithmic Trading Access"
+        "Agricultural commodities exposure",
+        "Sustainable farming investments",
+        "Seasonal market optimization",
+        "Global food supply chain access",
+        "Farmland REITs and derivatives"
       ],
-      benefits: "Premium solution for high-net-worth individuals seeking sophisticated strategies and personalized service.",
-      color: "from-primary to-purple-600"
+      benefits: "Provides exposure to the essential agricultural sector with quarterly returns and portfolio diversification benefits.",
+      color: "from-primary to-green-600"
     },
     {
-      name: "Institutional",
-      price: "$1,999",
-      weekly: "$1,500-$3,000+",
-      monthlyReturn: "20-35%+",
+      name: "Real Estate",
+      price: "$3,000",
+      roi: "30% ROI",
+      withdrawal: "Quarterly profit withdrawal",
       features: [
-        "Full-Service Wealth Management",
-        "Unlimited Portfolio Capacity",
-        "Dedicated Investment Team",
-        "Proprietary Market Intelligence",
-        "Private Equity Opportunities",
-        "Custom Financial Solutions"
+        "Commercial property investments",
+        "Residential development exposure",
+        "REIT portfolio management",
+        "International property markets",
+        "Real estate secured income",
+        "Property technology innovations"
       ],
-      benefits: "Comprehensive wealth management for institutions and ultra-high-net-worth clients requiring maximum customization.",
-      color: "from-purple-600 to-pink-500"
+      benefits: "Access the stability and growth of global real estate markets with quarterly profit distributions.",
+      color: "from-green-600 to-teal-600"
+    },
+    {
+      name: "Stocks",
+      price: "$15,000",
+      roi: "40% ROI",
+      withdrawal: "Quarterly profit withdrawal",
+      features: [
+        "Premium equity portfolio management",
+        "Blue-chip and growth stock balance",
+        "Dividend optimization strategy",
+        "Sector rotation algorithms",
+        "Pre-IPO opportunities",
+        "Exclusive market research access"
+      ],
+      benefits: "Our premium offering for serious investors seeking maximum returns from carefully selected global equity markets.",
+      color: "from-teal-600 to-blue-600"
     }
   ];
 
@@ -482,88 +497,92 @@ const Services = () => {
           </div>
         </motion.section>
 
-        {/* Investment Plans Section with eye-catching earnings */}
+        {/* Investment Plans Section with updated packages */}
         <motion.section 
-          className="py-20 bg-white"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainer}
+        className="py-20 bg-white"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={staggerContainer}
         >
-          <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4">
             <motion.div 
-              className="text-center max-w-3xl mx-auto mb-16"
-              variants={fadeIn}
+            className="text-center max-w-3xl mx-auto mb-16"
+            variants={fadeIn}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-dark mb-6">Investment Plans</h2>
-              <p className="text-lg text-gray-600 mb-4">
-                Select the perfect investment strategy tailored to your financial goals and risk tolerance.
-              </p>
-              <p className="text-sm text-gray-500 italic">
+            <h2 className="text-3xl md:text-4xl font-bold text-neutral-dark mb-6">Investment Packages</h2>
+            <p className="text-lg text-gray-600 mb-4">
+                Select from our diverse range of investment opportunities tailored to different goals and risk profiles.
+            </p>
+            <p className="text-sm text-gray-500 italic">
                 Note: Returns shown are based on historical performance and are not guaranteed. 
                 Investments may fluctuate in value.
-              </p>
+            </p>
             </motion.div>
             
             <div className="flex flex-wrap justify-center gap-8">
-              {investmentPlans.map((plan, index) => (
+            {investmentPlans.map((plan, index) => (
                 <motion.div 
-                  key={plan.name}
-                  className={`bg-white rounded-2xl overflow-hidden shadow-xl w-full max-w-sm ${plan.highlighted ? 'ring-4 ring-secondary' : ''}`}
-                  variants={cardHover}
-                  initial="rest"
-                  whileHover="hover"
-                  whileInView={{
+                key={plan.name}
+                className={`bg-white rounded-2xl overflow-hidden shadow-xl w-full max-w-sm ${plan.highlighted ? 'ring-4 ring-secondary' : ''}`}
+                variants={cardHover}
+                initial="rest"
+                whileHover="hover"
+                whileInView={{
                     opacity: [0, 1],
                     y: [50, 0],
                     transition: { duration: 0.6, delay: index * 0.1 }
-                  }}
-                  viewport={{ once: true, amount: 0.1 }}
+                }}
+                viewport={{ once: true, amount: 0.1 }}
                 >
-                  <div className={`bg-gradient-to-r ${plan.color} text-white p-6 relative overflow-hidden`}>
+                <div className={`bg-gradient-to-r ${plan.color} text-white p-6 relative overflow-hidden`}>
                     {plan.highlighted && (
-                      <div className="absolute top-0 right-0 bg-secondary text-neutral-dark text-xs font-bold px-3 py-1 transform rotate-45 translate-x-2 -translate-y-1">
+                    <div className="absolute top-0 right-0 bg-secondary text-neutral-dark text-xs font-bold px-3 py-1 transform rotate-45 translate-x-2 -translate-y-1">
                         POPULAR
-                      </div>
+                    </div>
                     )}
                     <h3 className="text-2xl font-bold mb-1">{plan.name}</h3>
-                    <p className="text-4xl font-extrabold mb-2">{plan.price}<span className="text-sm font-normal">/mo</span></p>
+                    <p className="text-4xl font-extrabold mb-2">{plan.price}<span className="text-sm font-normal"> min</span></p>
                     
                     <div className="mt-4 bg-white bg-opacity-20 p-4 rounded-lg">
-                      <p className="text-sm uppercase tracking-wide">Weekly Earnings Potential</p>
-                      <p className="text-3xl font-extrabold">{plan.weekly}</p>
-                      <p className="text-sm font-medium mt-1">{plan.monthlyReturn} Monthly Return</p>
+                    <div className="flex justify-between items-center mb-2">
+                        <p className="text-sm uppercase tracking-wide">Return Rate</p>
+                        <p className="text-xl font-extrabold">{plan.roi}</p>
                     </div>
-                  </div>
-                  
-                  <div className="p-6">
+                    <div className="pt-2 border-t border-white border-opacity-30">
+                        <p className="text-sm font-medium">{plan.withdrawal}</p>
+                    </div>
+                    </div>
+                </div>
+                
+                <div className="p-6">
                     <p className="text-gray-600 italic mb-6">{plan.benefits}</p>
                     <ul className="space-y-3 mb-8">
-                      {plan.features.map((feature, i) => (
+                    {plan.features.map((feature, i) => (
                         <li key={i} className="flex items-start">
-                          <svg className="w-5 h-5 text-secondary mt-1 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-5 h-5 text-secondary mt-1 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                          <span className="text-gray-700">{feature}</span>
+                        </svg>
+                        <span className="text-gray-700">{feature}</span>
                         </li>
-                      ))}
+                    ))}
                     </ul>
                     <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`w-full py-3 rounded-lg font-semibold ${
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`w-full py-3 rounded-lg font-semibold ${
                         plan.highlighted 
-                          ? 'bg-secondary text-neutral-dark' 
-                          : 'bg-primary text-white'
-                      }`}
+                        ? 'bg-secondary text-neutral-dark' 
+                        : 'bg-primary text-white'
+                    }`}
                     >
-                      Start Investing Now
+                    Start Investing Now
                     </motion.button>
-                  </div>
+                </div>
                 </motion.div>
-              ))}
+            ))}
             </div>
-          </div>
+        </div>
         </motion.section>
 
         {/* Process Section */}

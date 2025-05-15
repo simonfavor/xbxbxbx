@@ -1,77 +1,108 @@
-// src/components/DashboardNavbar.jsx
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+// src/components/Navbar.jsx
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { FaBell, FaSearch, FaUserCircle, FaBars } from 'react-icons/fa';
 
-const DashboardNavbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
+  const [profileImg, setProfileImg] = useState(null);
+  const [notifications, setNotifications] = useState(3);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
 
-  const navItems = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Portfolio', path: '/portfolio' },
-    { name: 'Markets', path: '/markets' },
-    { name: 'Profile', path: '/profile' },
-    { name: 'Logout', path: '/logout' },
-  ];
+  // Simulate fetching user data
+  useEffect(() => {
+    // Replace with actual API call to get user profile image
+    // For demonstration, we'll leave it null to show the placeholder
+    // setProfileImg('https://your-api.com/profile-image');
+  }, []);
 
-  const variants = {
-    open: { opacity: 1, height: 'auto' },
-    closed: { opacity: 0, height: 0 },
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
-    <nav className="bg-neutral-dark text-white shadow-lg sticky top-0 z-20">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <motion.div
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-2xl font-extrabold tracking-tight">GNF Invest</h1>
-        </motion.div>
-
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-              />
-            </svg>
+    <div className="sticky top-0 z-30 bg-white dark:bg-neutral-800 shadow-md">
+      <div className="flex items-center justify-between px-4 py-2">
+        <div className="flex items-center">
+          <button 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-neutral-700 transition-colors"
+            aria-label="Toggle sidebar"
+          >
+            <FaBars className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
+          
+          <div className="relative mx-4">
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="pl-10 pr-4 py-2 rounded-full bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary w-64"
+            />
+          </div>
         </div>
 
-        <motion.ul
-          className={`md:flex md:space-x-6 absolute md:static bg-neutral-dark w-full md:w-auto left-0 top-16 md:top-0 overflow-hidden md:overflow-visible ${isOpen ? 'block' : 'hidden md:block'}`}
-          variants={variants}
-          animate={isOpen ? 'open' : 'closed'}
-          transition={{ duration: 0.3 }}
-        >
-          {navItems.map((item) => (
-            <motion.li
-              key={item.name}
-              whileHover={{ scale: 1.1, color: '#F59E0B' }} // Secondary color (gold)
-              transition={{ type: 'spring', stiffness: 300 }}
-              className="p-3 md:p-0"
+        <div className="flex items-center space-x-4">
+          {/* Notification bell */}
+          <div className="relative">
+            <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-neutral-700 transition-colors">
+              <FaBell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              {notifications > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {notifications}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Profile dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => setShowProfileMenu(!showProfileMenu)} 
+              className="flex items-center space-x-2 focus:outline-none"
             >
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  isActive
-                    ? 'text-secondary font-semibold'
-                    : 'hover:text-secondary transition-colors'
-                }
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-secondary flex items-center justify-center bg-gray-200 dark:bg-neutral-700">
+                {profileImg ? (
+                  <img src={profileImg} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <FaUserCircle className="w-full h-full text-gray-400" />
+                )}
+              </div>
+              <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200">
+                John Doe
+              </span>
+            </button>
+
+            {/* Profile dropdown menu */}
+            {showProfileMenu && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute right-0 mt-2 w-48 bg-white dark:bg-neutral-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-neutral-700"
               >
-                {item.name}
-              </NavLink>
-            </motion.li>
-          ))}
-        </motion.ul>
+                <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                  Your Profile
+                </a>
+                <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                  Settings
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-neutral-700"
+                >
+                  Sign out
+                </button>
+              </motion.div>
+            )}
+          </div>
+        </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
-export default DashboardNavbar;
+export default Navbar;

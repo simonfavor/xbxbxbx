@@ -21,32 +21,49 @@ const Home = () => {
   };
 
   // Plans data
-  const plans = [
+  const investmentPackages = [
     {
-      name: 'Starter',
-      price: '$99',
-      features: ['Basic Analytics', '1 Portfolio', 'Email Support'],
+      name: 'Crypto',
+      minAmount: '$500',
+      roi: '30% ROI',
+      withdrawal: '10 days profit withdrawal',
+      color: 'bg-purple-100 border-purple-500'
     },
     {
-      name: 'Growth',
-      price: '$249',
-      features: ['Advanced Analytics', '3 Portfolios', 'Priority Email Support'],
+      name: 'Crypto Compounding',
+      minAmount: '$500',
+      roi: '70% ROI',
+      withdrawal: '45 days profit withdrawal',
+      color: 'bg-indigo-100 border-indigo-500'
     },
     {
-      name: 'Pro',
-      price: '$499',
-      features: ['Real-Time Data', '5 Portfolios', '24/7 Support'],
+      name: 'Agriculture',
+      minAmount: '$1,000',
+      roi: '30% ROI',
+      withdrawal: 'Quarterly profit withdrawal',
+      color: 'bg-amber-100 border-amber-500'
     },
     {
-      name: 'Elite',
-      price: '$999',
-      features: ['Custom Strategies', '10 Portfolios', 'Dedicated Advisor'],
-    },
+        name: 'Bonds',
+        minAmount: '$1,000',
+        roi: '30% ROI',
+        withdrawal: 'Quarterly profit withdrawal',
+        color: 'bg-green-100 border-green-500'
+      },
     {
-      name: 'Premium',
-      price: '$1,999',
-      features: ['Full Access', 'Unlimited Portfolios', 'Personal Wealth Manager'],
+      name: 'Real Estate',
+      minAmount: '$3,000',
+      roi: '30% ROI',
+      withdrawal: 'Quarterly profit withdrawal',
+      color: 'bg-rose-100 border-rose-500'
     },
+    { 
+        name: 'Stocks', 
+        minAmount: '$15,000', 
+        roi: '40% ROI', 
+        withdrawal: 'Quarterly profit withdrawal',
+        color: 'bg-blue-100 border-blue-500'
+      },
   ];
 
   // Expanded testimonials data
@@ -885,66 +902,72 @@ const Home = () => {
       </motion.section>
 
       {/* Plans Section with animated hover effects */}
-      <motion.section 
-        className="py-16 bg-neutral-light"
-        {...plansAnimation}
-      >
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold text-neutral-dark mb-4"
-              variants={itemVariants}
-            >
-              Investment Plans
-            </motion.h2>
-            <motion.p
-              className="text-lg text-gray-600 max-w-3xl mx-auto"
-              variants={itemVariants}
-            >
-              Choose the perfect plan to match your investment goals and risk tolerance.
-            </motion.p>
-          </div>
-          
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6"
-            variants={containerVariants}
-          >
-            {plans.map((plan, index) => (
-              <motion.div
-                key={plan.name}
-                className={`bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border-t-4 ${index === 2 ? 'border-secondary md:scale-105 z-10' : 'border-primary'}`}
-                variants={itemVariants}
-                whileHover={{ 
-                  y: -10,
-                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-                }}
-              >
-                <div className="flex flex-col h-full">
-                  <h3 className="text-2xl font-semibold text-neutral-dark mb-2">{plan.name}</h3>
-                  <p className="text-3xl font-bold text-primary mb-4">{plan.price}<span className="text-base font-normal text-gray-500">/mo</span></p>
-                  <ul className="text-gray-600 mb-6 space-y-3 flex-grow">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-start">
-                        <svg className="w-5 h-5 text-secondary mt-1 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`w-full py-3 rounded-lg font-semibold ${index === 2 ? 'bg-secondary text-white' : 'bg-primary text-white'}`}
-                  >
-                    Get Started
-                  </motion.button>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+      <section className="py-16 bg-neutral-light">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-neutral-dark mb-4">
+            Investment Packages
+          </h2>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Choose from our diverse range of investment opportunities tailored to different risk appetites
+          </p>
         </div>
-      </motion.section>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {investmentPackages.map((pkg, index) => (
+            <motion.div
+              key={index}
+              className={`border-l-4 rounded-lg shadow-lg overflow-hidden ${pkg.color}`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="p-6 bg-white">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-2xl font-bold text-neutral-dark">{pkg.name}</h3>
+                  <span className="px-3 py-1 rounded-full bg-primary text-white text-sm font-medium">
+                    {pkg.roi}
+                  </span>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <svg className="w-5 h-5 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-gray-700">Min. Investment: <strong>{pkg.minAmount}</strong></span>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <svg className="w-5 h-5 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span className="text-gray-700">Withdrawal: <strong>{pkg.withdrawal}</strong></span>
+                  </div>
+                </div>
+                
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full mt-6 py-3 bg-gradient-to-r from-primary to-teal-600 text-white rounded-lg font-semibold shadow-md"
+                >
+                  Invest Now
+                </motion.button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        
+        <div className="mt-12 text-center">
+          <p className="text-gray-600 mb-6">Not sure which package is right for you?</p>
+          <button className="px-6 py-3 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors">
+            Get Personalized Recommendation
+          </button>
+        </div>
+      </div>
+    </section>
 
       {/* Why Choose GNF Section with animated SVG illustrations */}
       <motion.section 

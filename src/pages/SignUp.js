@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEye, FaEyeSlash, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaGlobe, FaLock, FaShieldAlt } from 'react-icons/fa';
-import Navbar from './components/navbar';
-import Footer from './components/footer';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import PublicNavbar from './components/navbar'; // Adjust path if needed
+import Footer from './components/footer'; // Adjust path if needed
 
 const SignUp = () => {
-  // Form state
   const [formData, setFormData] = useState({
     username: '',
     firstName: '',
@@ -23,42 +25,42 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.15,
-        duration: 0.5
+        duration: 0.5,
       },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        type: "spring", 
-        stiffness: 100, 
-        damping: 10 
-      } 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 10,
+      },
     },
   };
 
   const fieldVariants = {
     hidden: { opacity: 0, x: -20 },
-    visible: { 
-      opacity: 1, 
-      x: 0, 
-      transition: { 
-        type: "spring", 
-        stiffness: 120, 
-        damping: 9 
-      } 
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 120,
+        damping: 9,
+      },
     },
   };
 
@@ -66,30 +68,24 @@ const SignUp = () => {
     initial: { opacity: 0, x: 100 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -100 },
-    transition: { type: "spring", stiffness: 80, damping: 15 }
+    transition: { type: 'spring', stiffness: 80, damping: 15 },
   };
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: '' });
   };
 
-  // Validate current step
   const validateStep = (step) => {
     const newErrors = {};
-    
     if (step === 1) {
       if (!formData.username.trim()) newErrors.username = 'Username is required';
       else if (formData.username.length < 3) newErrors.username = 'Username must be at least 3 characters';
-      
       if (!formData.firstName.trim()) newErrors.firstName = 'First Name is required';
       if (!formData.lastName.trim()) newErrors.lastName = 'Last Name is required';
-      
       if (!formData.email.trim()) newErrors.email = 'Email is required';
       else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
     }
-    
     if (step === 2) {
       if (!formData.dob) newErrors.dob = 'Date of Birth is required';
       if (!formData.address.trim()) newErrors.address = 'Address is required';
@@ -97,134 +93,110 @@ const SignUp = () => {
       else if (!/^\d{10,15}$/.test(formData.phone)) newErrors.phone = 'Invalid phone number';
       if (!formData.country) newErrors.country = 'Country is required';
     }
-    
     if (step === 3) {
       if (!formData.password) newErrors.password = 'Password is required';
       else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
       else if (!/(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(formData.password)) {
         newErrors.password = 'Password must contain at least one uppercase letter, one number, and one special character';
       }
-      
       if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm Password is required';
       else if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = 'Passwords do not match';
       }
     }
-    
     return newErrors;
   };
 
-  // Handle next step
   const handleNextStep = () => {
     const validationErrors = validateStep(currentStep);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
     setCurrentStep(currentStep + 1);
     setErrors({});
   };
 
-  // Handle previous step
   const handlePrevStep = () => {
     setCurrentStep(currentStep - 1);
     setErrors({});
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateStep(currentStep);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
+
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Sign Up submitted:', formData);
+    try {
+      const response = await axios.post('https://xbxbxb.onrender.com/api/auth/signup', formData);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('UserData', response.data.user);
+      toast.success('Signed up successfully!');
+      navigate('/account/dashboard');
+    } catch (error) {
+      setErrors({ general: error.response?.data?.message || 'Signup failed' });
+    } finally {
       setIsSubmitting(false);
-      
-      // Reset form for demo purposes
-      setFormData({
-        username: '',
-        firstName: '',
-        lastName: '',
-        dob: '',
-        address: '',
-        phone: '',
-        email: '',
-        country: '',
-        password: '',
-        confirmPassword: '',
-      });
-      setErrors({});
-      setCurrentStep(1);
-    }, 2000);
+    }
   };
 
-  // Country options
-  const countries = ['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Japan', 'China', 'India', 'Brazil', 'South Africa', 'Other'];
+  const countries = [
+    'United States',
+    'Canada',
+    'United Kingdom',
+    'Australia',
+    'Germany',
+    'France',
+    'Japan',
+    'China',
+    'India',
+    'Brazil',
+    'South Africa',
+    'Other',
+  ];
 
-  // Progress bar percentage
   const progressPercentage = ((currentStep - 1) / 2) * 100;
 
   return (
     <>
-      <Navbar />
-      <div className="bg-gradient-to-b from-neutral-100 to-white min-h-screen py-32">
+      <PublicNavbar />
+      <div className="bg-gradient-to-b from-neutral-light to-white min-h-screen py-32">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {/* Header */}
             <div className="bg-primary text-white p-8">
               <h1 className="text-3xl font-bold mb-4">Join GNF Invest</h1>
               <p className="opacity-90 mb-6">Create your account to start your investment journey with us</p>
-              
-              {/* Progress bar */}
               <div className="w-full bg-white bg-opacity-20 h-2 rounded-full mb-2">
-                <motion.div 
-                  className="bg-white h-full rounded-full" 
+                <motion.div
+                  className="bg-white h-full rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercentage}%` }}
                   transition={{ duration: 0.5 }}
                 ></motion.div>
               </div>
-              
               <div className="flex justify-between text-sm opacity-90">
                 <span>Account Information</span>
                 <span>Personal Details</span>
                 <span>Security</span>
               </div>
             </div>
-            
-            {/* Form content */}
             <div className="p-8">
               <form onSubmit={currentStep === 3 ? handleSubmit : (e) => e.preventDefault()}>
-                {/* Step 1: Account Information */}
                 {currentStep === 1 && (
-                  <motion.div 
-                    className="space-y-6"
-                    {...pageTransition}
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    <motion.h2 
-                      className="text-2xl font-bold text-neutral-800 mb-6 flex items-center"
-                      variants={itemVariants}
-                    >
+                  <motion.div className="space-y-6" {...pageTransition} variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.h2 className="text-2xl font-bold text-neutral-dark mb-6 flex items-center" variants={itemVariants}>
                       <FaUser className="mr-3 text-primary" />
                       Account Information
                     </motion.h2>
-                    
                     <motion.div variants={fieldVariants}>
                       <label htmlFor="username" className="block text-neutral-dark font-semibold mb-2">
                         Username
@@ -242,7 +214,6 @@ const SignUp = () => {
                       />
                       {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
                     </motion.div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <motion.div variants={fieldVariants}>
                         <label htmlFor="firstName" className="block text-neutral-dark font-semibold mb-2">
@@ -261,7 +232,6 @@ const SignUp = () => {
                         />
                         {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                       </motion.div>
-
                       <motion.div variants={fieldVariants}>
                         <label htmlFor="lastName" className="block text-neutral-dark font-semibold mb-2">
                           Last Name
@@ -280,7 +250,6 @@ const SignUp = () => {
                         {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                       </motion.div>
                     </div>
-
                     <motion.div variants={fieldVariants}>
                       <label htmlFor="email" className="block text-neutral-dark font-semibold mb-2">
                         Email
@@ -305,24 +274,12 @@ const SignUp = () => {
                     </motion.div>
                   </motion.div>
                 )}
-
-                {/* Step 2: Personal Details */}
                 {currentStep === 2 && (
-                  <motion.div 
-                    className="space-y-6"
-                    {...pageTransition}
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    <motion.h2 
-                      className="text-2xl font-bold text-neutral-800 mb-6 flex items-center"
-                      variants={itemVariants}
-                    >
+                  <motion.div className="space-y-6" {...pageTransition} variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.h2 className="text-2xl font-bold text-neutral-dark mb-6 flex items-center" variants={itemVariants}>
                       <FaMapMarkerAlt className="mr-3 text-primary" />
                       Personal Details
                     </motion.h2>
-                    
                     <motion.div variants={fieldVariants}>
                       <label htmlFor="dob" className="block text-neutral-dark font-semibold mb-2">
                         Date of Birth
@@ -344,7 +301,6 @@ const SignUp = () => {
                       </div>
                       {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob}</p>}
                     </motion.div>
-
                     <motion.div variants={fieldVariants}>
                       <label htmlFor="address" className="block text-neutral-dark font-semibold mb-2">
                         Address
@@ -362,7 +318,6 @@ const SignUp = () => {
                       ></textarea>
                       {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
                     </motion.div>
-
                     <motion.div variants={fieldVariants}>
                       <label htmlFor="phone" className="block text-neutral-dark font-semibold mb-2">
                         Phone
@@ -385,7 +340,6 @@ const SignUp = () => {
                       </div>
                       {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                     </motion.div>
-
                     <motion.div variants={fieldVariants}>
                       <label htmlFor="country" className="block text-neutral-dark font-semibold mb-2">
                         Country
@@ -415,24 +369,12 @@ const SignUp = () => {
                     </motion.div>
                   </motion.div>
                 )}
-
-                {/* Step 3: Security */}
                 {currentStep === 3 && (
-                  <motion.div 
-                    className="space-y-6"
-                    {...pageTransition}
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    <motion.h2 
-                      className="text-2xl font-bold text-neutral-800 mb-6 flex items-center"
-                      variants={itemVariants}
-                    >
+                  <motion.div className="space-y-6" {...pageTransition} variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.h2 className="text-2xl font-bold text-neutral-dark mb-6 flex items-center" variants={itemVariants}>
                       <FaShieldAlt className="mr-3 text-primary" />
                       Security Setup
                     </motion.h2>
-                    
                     <motion.div variants={fieldVariants} className="relative">
                       <label htmlFor="password" className="block text-neutral-dark font-semibold mb-2">
                         Password
@@ -461,16 +403,24 @@ const SignUp = () => {
                         </button>
                       </div>
                       {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-                      
-                      {/* Password strength indicator */}
                       {formData.password && (
                         <div className="mt-3">
                           <div className="flex mb-1 gap-1">
-                            <div className={`h-1 flex-1 rounded-full ${formData.password.length > 0 ? 'bg-red-400' : 'bg-gray-200'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${formData.password.length >= 8 ? 'bg-orange-400' : 'bg-gray-200'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${/[A-Z]/.test(formData.password) ? 'bg-yellow-400' : 'bg-gray-200'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${/[0-9]/.test(formData.password) ? 'bg-green-400' : 'bg-gray-200'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${/[!@#$%^&*]/.test(formData.password) ? 'bg-green-600' : 'bg-gray-200'}`}></div>
+                            <div
+                              className={`h-1 flex-1 rounded-full ${formData.password.length > 0 ? 'bg-red-400' : 'bg-gray-200'}`}
+                            ></div>
+                            <div
+                              className={`h-1 flex-1 rounded-full ${formData.password.length >= 8 ? 'bg-orange-400' : 'bg-gray-200'}`}
+                            ></div>
+                            <div
+                              className={`h-1 flex-1 rounded-full ${/[A-Z]/.test(formData.password) ? 'bg-yellow-400' : 'bg-gray-200'}`}
+                            ></div>
+                            <div
+                              className={`h-1 flex-1 rounded-full ${/[0-9]/.test(formData.password) ? 'bg-green-400' : 'bg-gray-200'}`}
+                            ></div>
+                            <div
+                              className={`h-1 flex-1 rounded-full ${/[!@#$%^&*]/.test(formData.password) ? 'bg-green-600' : 'bg-gray-200'}`}
+                            ></div>
                           </div>
                           <div className="text-xs text-gray-500 flex justify-between">
                             <span>Weak</span>
@@ -479,7 +429,6 @@ const SignUp = () => {
                         </div>
                       )}
                     </motion.div>
-
                     <motion.div variants={fieldVariants} className="relative">
                       <label htmlFor="confirmPassword" className="block text-neutral-dark font-semibold mb-2">
                         Confirm Password
@@ -507,22 +456,19 @@ const SignUp = () => {
                           {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
                       </div>
-                      {errors.confirmPassword && (
-                        <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
-                      )}
+                      {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
                     </motion.div>
-                    
                     <motion.div variants={fieldVariants} className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                      <h3 className="font-semibold text-neutral-800 mb-2 flex items-center">
-                        <FaShieldAlt className="mr-2 text-primary" /> 
+                      <h3 className="font-semibold text-neutral-dark mb-2 flex items-center">
+                        <FaShieldAlt className="mr-2 text-primary" />
                         Account Security
                       </h3>
                       <p className="text-sm text-gray-700">
-                        At GNF Invest, we prioritize the security of your financial information. Your data is encrypted 
-                        with bank-level security standards and we implement strict privacy policies to protect your personal details.
+                        At GNF Invest, we prioritize the security of your financial information. Your data is encrypted
+                        with bank-level security standards and we implement strict privacy policies to protect your personal
+                        details.
                       </p>
                     </motion.div>
-                    
                     <motion.div variants={fieldVariants} className="flex items-start">
                       <input
                         type="checkbox"
@@ -530,31 +476,31 @@ const SignUp = () => {
                         className="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
                       />
                       <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-700">
-                        I agree to GNF Invest's <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>. I acknowledge that my information will be processed according to these policies.
+                        I agree to GNF Invest's <a href="#" className="text-primary hover:underline">Terms of Service</a> and{' '}
+                        <a href="#" className="text-primary hover:underline">Privacy Policy</a>. I acknowledge that my
+                        information will be processed according to these policies.
                       </label>
                     </motion.div>
                   </motion.div>
                 )}
-
-                {/* Form Controls */}
+                {errors.general && <p className="text-red-500 text-sm mt-4 text-center">{errors.general}</p>}
                 <div className="flex justify-between mt-10">
                   {currentStep > 1 && (
                     <motion.button
                       type="button"
                       onClick={handlePrevStep}
-                      className="px-6 py-2 border border-primary text-primary font-medium rounded-lg hover:bg-primary-50 transition-colors"
+                      className="px-6 py-2 border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white transition-colors"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       Back
                     </motion.button>
                   )}
-                  
                   {currentStep < 3 ? (
                     <motion.button
                       type="button"
                       onClick={handleNextStep}
-                      className="ml-auto px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors"
+                      className="ml-auto px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-teal-700 transition-colors"
                       whileHover={{ scale: 1.02, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -563,16 +509,25 @@ const SignUp = () => {
                   ) : (
                     <motion.button
                       type="submit"
-                      className="ml-auto px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors flex items-center"
+                      className="ml-auto px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-teal-700 transition-colors flex items-center"
                       whileHover={{ scale: 1.02, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}
                       whileTap={{ scale: 0.98 }}
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
                         <>
-                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <svg
+                            className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
                           </svg>
                           Creating Account...
                         </>
@@ -582,10 +537,12 @@ const SignUp = () => {
                     </motion.button>
                   )}
                 </div>
-                
                 {currentStep === 1 && (
                   <div className="text-center mt-6 text-sm text-gray-600">
-                    Already have an account? <a href="/login" className="text-primary hover:underline font-medium">Log in</a>
+                    Already have an account?{' '}
+                    <a href="/login" className="text-primary hover:underline font-medium">
+                      Log in
+                    </a>
                   </div>
                 )}
               </form>
@@ -593,7 +550,7 @@ const SignUp = () => {
           </motion.div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };
