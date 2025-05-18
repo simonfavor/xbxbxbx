@@ -207,7 +207,6 @@ const Login = () => {
                     </label>
                   </div>
                   <a href="#" className="text-sm text-primary hover:text-teal-700 transition-colors">
-                    Forgot password?
                   </a>
                 </motion.div>
                 {errors.general && <p className="text-red-500 text-sm mt-4 text-center">{errors.general}</p>}
