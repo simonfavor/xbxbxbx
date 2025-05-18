@@ -80,7 +80,7 @@ const Login = () => {
       const response = await axios.post('https://xbxbxb.onrender.com/api/auth/login', formData);
       localStorage.setItem('token', response.data.token);
       toast.success('Logged in successfully!');
-      navigate('/dashboard');
+      navigate('/account/dashboard');
     } catch (error) {
       setErrors({ general: error.response?.data?.message || 'Login failed' });
     } finally {
